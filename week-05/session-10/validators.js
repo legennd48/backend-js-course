@@ -11,13 +11,9 @@ function isEmail(str) {
 
 function isURL(str) {
   if (typeof str !== 'string') return false;
-  try {
-    // URL constructor will throw for invalid URLs
-    const url = new URL(str);
-    return url.protocol === 'http:' || url.protocol === 'https:';
-  } catch {
-    return false;
-  }
+  // Avoid relying on the global URL constructor (not guaranteed in the sandbox)
+  // Accept basic http/https URLs.
+  return /^https?:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^\s]*)?$/i.test(str);
 }
 
 function isStrongPassword(str) {
