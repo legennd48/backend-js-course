@@ -127,7 +127,16 @@ function validateUser(user) {
  */
 function trySafely(fn) {
   try {
-    const result = fn();
+    let callable = fn;
+    if (typeof callable === 'string') {
+      // Spec passes a function expression string like "() => 5"
+      callable = eval(callable);
+    }
+    if (typeof callable !== 'function') {
+      throw new Error('fn is not a function');
+    }
+
+    const result = callable();
     return { success: true, result };
   } catch (error) {
     return { success: false, error: error.message };
